@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Nova.fun V3</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+background:#0f0f0f;
+color:white;
+font-family:Arial;
+padding:20px;
+}
+
+.card{
+background:#222;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+}
+
+input,textarea{
+width:100%;
+padding:12px;
+margin:6px 0;
+border-radius:10px;
+border:0;
+}
+
+button{
+background:#00d084;
+padding:12px;
+border:0;
+border-radius:10px;
+font-weight:bold;
+}
+
+.coin{
+background:#292929;
+padding:15px;
+border-radius:15px;
+margin-top:15px;
+}
+
+.logo{
+width:80px;
+height:80px;
+border-radius:50%;
+}
+
+.bar{
+background:#555;
+height:15px;
+border-radius:10px;
+}
+
+.fill{
+background:#00d084;
+height:15px;
+width:60%;
+border-radius:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<h1>🚀 Nova.fun</h1>
+
+
+<div class="card">
+
+<button onclick="wallet()">
+Connect Wallet
+</button>
+
+<p id="wallet">
+Wallet belum terhubung
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Create Meme Coin</h2>
+
+
+<input id="name" placeholder="Nama Coin">
+
+
+<input id="ticker" placeholder="Ticker">
+
+
+<input id="image" placeholder="Link gambar logo">
+
+
+<textarea id="desc" placeholder="Deskripsi"></textarea>
+
+
+<button onclick="createCoin()">
+Create Token
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+<h2>🔥 Trending Coins</h2>
+
+<div id="list"></div>
+
+</div>
+
+
+
+<script>
+
+
+let coins =
+JSON.parse(localStorage.getItem("coins")) || [];
+
+
+async function wallet(){
+
+if(window.solana && window.solana.isPhantom){
+
+try{
+
+const response = await window.solana.connect();
+
+document.getElementById("wallet").innerHTML =
+"Connected: " + response.publicKey.toString();
+
+}
+
+catch(error){
+
+document.getElementById("wallet").innerHTML =
+"Connection dibatalkan";
+
+}
+
+}
+
+else{
+
+alert("Phantom Wallet belum terdeteksi");
+
+}
+
+}
+
+
+
+function save(){
+
+localStorage.setItem(
+"coins",
+JSON.stringify(coins)
+);
+
+}
+
+
+
+function showCoins(){
+
+document.getElementById("list").innerHTML="";
+
+
+coins.forEach(c=>{
+
+document.getElementById("list").innerHTML += `
+
+<div class="coin">
+
+
+<img class="logo" src="${c.image}">
+
+
+<h2>
+${c.name} (${c.ticker})
+</h2>
+
+
+<p>
+${c.desc}
+</p>
+
+
+<p>
+💰 Price: 0.000001 SOL
+</p>
+
+
+<p>
+👥 Holders: 25
+</p>
+
+
+<p>
+📊 Market Cap: $1000
+</p>
+
+
+<p>
+Bonding Curve
+</p>
+
+
+<div class="bar">
+<div class="fill"></div>
+</div>
+
+
+<br>
+
+
+<button>BUY</button>
+
+<button>SELL</button>
+
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+
+function createCoin(){
+
+
+let coin={
+
+name:
+document.getElementById("name").value,
+
+ticker:
+document.getElementById("ticker").value,
+
+image:
+document.getElementById("image").value,
+
+desc:
+document.getElementById("desc").value
+
+};
+
+
+coins.push(coin);
+
+save();
+
+showCoins();
+
+
+}
+
+
+showCoins();
+
+
+</script>
+
+
+</body>
+</html>
